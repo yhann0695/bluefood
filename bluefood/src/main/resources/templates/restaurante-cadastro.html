@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	layout:decorator="/base/layout">
+
+	<body>
+		<div layout:fragment="content">
+
+		<div>
+			<h1>Cadastro de Restaurante</h1>
+						
+				<div id="mensagemDeSucesso" th:if="${msg != null}">
+					<span th:text="${msg}"></span>		
+				</div>
+				
+				<form method="post" th:object="${restaurante}" th:action="${editMode} ? @{/restaurante/save} : @{/public/restaurante/save}" enctype="multipart/form-data">
+					<fieldset>
+						<input type="hidden" th:field="*{id}">
+						
+						<label for="nome">Nome do Restaurante: </label><br>	
+						<input type="text" id="nome" name="nome" placeholder="Nome..." th:field="*{nome}"
+						th:classappend="${#fields.hasErrors('nome')} ? 'inputError' : ''"><br><br>
+						<div id="mensagemDeErro" th:if="${#fields.hasErrors('nome')}">
+							<span th:errors="*{nome}"></span>
+						</div>
+						
+						<label for="cnpj">CNPJ: </label><br>	
+						<input type="text" id="cnpj" name="cnpj" placeholder="CNPJ..." th:field="*{cnpj}"
+						th:classappend="${#fields.hasErrors('cnpj')} ? 'inputError' : ''" onkeypress="return onlynumber();"><br><br>
+						<div id="mensagemDeErro" th:if="${#fields.hasErrors('cnpj')}">
+							<span th:errors="*{cnpj}"></span>
+						</div>
+						
+						<label for="email">E-mail: </label><br>	
+						<input type="text" id="email" name="email" placeholder="E-mail..." th:field="*{email}"
+						th:classappend="${#fields.hasErrors('cnpj')} ? 'inputError' : ''"><br><br>
+						<div id="mensagemDeErro" th:if="${#fields.hasErrors('email')}">
+							<span th:errors="*{email}"></span>
+						</div>
+						
+						<label for="telefone">Telefone: </label><br>	
+						<input type="text" id="telefone" name="telefone" placeholder="Telefone..." th:field="*{telefone}"
+						th:classappend="${#fields.hasErrors('telefone')} ? 'inputError' : ''" onkeypress="return onlynumber();"><br><br>
+						<div id="mensagemDeErro" th:if="${#fields.hasErrors('telefone')}">
+							<span th:errors="*{telefone}"></span>
+						</div>
+						
+						<label for="taxaEntrega">Taxa de entrega: </label><br>	
+						<input type="text" id="taxaEntrega" name="taxaEntrega" placeholder="taxaEntrega..." th:field="*{taxaEntrega}"
+						th:classappend="${#fields.hasErrors('taxaEntrega')} ? 'inputError' : ''" onkeypress="return onlynumber();"><br><br>
+						<div id="mensagemDeErro" th:if="${#fields.hasErrors('taxaEntrega')}">
+							<span th:errors="*{taxaEntrega}"></span>
+						</div>
+						
+						<label for="tempoEntrega">Tempo de entrega (min): </label><br>	
+						<input type="text" id="tempoEntrega" name="tempoEntrega" placeholder="tempoEntrega..." th:field="*{tempoEntregaBase}"
+						th:classappend="${#fields.hasErrors('tempoEntregaBase')} ? 'inputError' : ''" onkeypress="return onlynumber();"><br><br>
+						<div id="mensagemDeErro" th:if="${#fields.hasErrors('tempoEntregaBase')}">
+							<span th:errors="*{tempoEntregaBase}"></span>
+						</div>
+					
+						
+						<label for="categorias">Categoria de comida: </label><br>	
+						<select name="categorias" id="categorias" multiple="multiple" th:field="*{categorias}" style="height: 90px;"
+						th:classappend="${#fields.hasErrors('categorias')} ? 'inputError' : ''">
+							<option th:each="categoria : ${categorias}" th:value="${categoria.id}" th:text="${categoria.nome}"></option>			
+						</select>
+						<div id="mensagemDeErro" th:if="${#fields.hasErrors('categorias')}">
+							<span th:errors="*{categorias}"></span>
+						</div>
+						<br><br>
+						
+						<label for="logotipo">Logotipo: </label><br>	
+						<input type="file" id="logotipo" name="logotipo" placeholder="Selecionar..." th:field="*{logotipoFile}"
+						th:classappend="${#fields.hasErrors('logotipoFile')} ? 'inputError' : ''"><br><br>
+						<div id="mensagemDeErro" th:if="${#fields.hasErrors('logotipoFile')}">
+							<span th:errors="*{logotipoFile}"></span>
+						</div>
+						
+						
+						<div th:if="${!editMode}">
+							<label for="senha">Senha: </label><br>	
+							<input type="password" id="senha" name="senha" placeholder="Senha..."
+							th:classappend="${#fields.hasErrors('senha')} ? 'inputError' : ''"><br><br>
+							<div id="mensagemDeErro" th:if="${#fields.hasErrors('senha')}">
+								<span th:errors="*{senha}"></span>
+							</div>
+						</div>
+						
+						<input type="hidden" name="senha" value="*" th:if="${editMode}"/>
+				
+						<input type="submit" th:value="${!editMode} ?  'Cadastrar' : 'Alterar'">
+					</fieldset>
+				</form>
+				<br>				
+				<input type="button" value="Voltar" th:onclick="'location.href=\'' + @{/restaurante/home} + '\';'" />
+			</div>
+	</div>
+	</body>
+</html>
