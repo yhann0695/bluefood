@@ -14,6 +14,8 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import com.bluefood.domain.pagamento.DadosCartao;
+import com.bluefood.domain.pagamento.Pagamento;
+import com.bluefood.domain.pagamento.PagamentoRepository;
 import com.bluefood.domain.pagamento.StatusPagamento;
 import com.bluefood.domain.pedido.Carrinho;
 import com.bluefood.domain.pedido.ItemPedido;
@@ -29,6 +31,9 @@ public class PedidoService {
 	
 	@Autowired
 	private PedidoRepository pedidoRepository;
+	
+	@Autowired
+	private PagamentoRepository pagamentoRepository;
 	
 	@Autowired
 	private ItemPedidoRepository itemPedidoRepository;
@@ -67,7 +72,7 @@ public class PedidoService {
 		dadosCartao.setNumCartao(numCartao);
 		
 		MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
-		headers.add("Token", "sbPayToken");
+		headers.add("Token", sbPayToken);
 		
 		HttpEntity<DadosCartao> requestEntity = new HttpEntity<>(dadosCartao,headers);
 		
@@ -85,6 +90,12 @@ public class PedidoService {
 		if (statusPagamento != StatusPagamento.Autorizado) {
 			throw new PagamentoException(statusPagamento.getDescricao());
 		}
+		
+		Pagamento pagamento = new Pagamento();
+		pagamento.setData(LocalDateTime.now());
+		pagamento.setPedido(pedido);
+		pagamento.definirNumeroEBandeira(numCartao);
+		pagamentoRepository.save(pagamento);
 		
 		return pedido;		
 	}
