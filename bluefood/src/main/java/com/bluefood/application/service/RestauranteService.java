@@ -9,6 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.bluefood.domain.cliente.Cliente;
 import com.bluefood.domain.cliente.ClienteRepository;
+import com.bluefood.domain.restaurante.ItemCardapio;
+import com.bluefood.domain.restaurante.ItemCardapioRepository;
 import com.bluefood.domain.restaurante.Restaurante;
 import com.bluefood.domain.restaurante.RestauranteComparator;
 import com.bluefood.domain.restaurante.RestauranteRepository;
@@ -24,6 +26,9 @@ public class RestauranteService {
 	
 	@Autowired
 	private ClienteRepository clienteRepository;
+	
+	@Autowired
+	private ItemCardapioRepository itemCardapioRepository;
 	
 	@Autowired
 	private ImageService imageService;
@@ -99,5 +104,12 @@ public class RestauranteService {
 		restaurantes.sort(comparator);
 		
 		return restaurantes;
+	}
+	
+	@Transactional
+	public void saveItemCardapio(ItemCardapio itemCardapio) {
+		itemCardapio = itemCardapioRepository.save(itemCardapio);
+		itemCardapio.setImageFileName();
+		imageService.uploadComidas(itemCardapio.getImagemFile(), itemCardapio.getImagem());
 	}
 }

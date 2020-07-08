@@ -29,6 +29,14 @@ public class ImageService {
 		}
 	}
 	
+	public void uploadComidas(MultipartFile multipartFile, String fileName) {
+		try {
+			IOUtils.copy(multipartFile.getInputStream(), fileName, comidasDir);
+		} catch (IOException e) {
+			throw new ApplicationServiceException(e);
+		}
+	}
+	
 	public byte[] getByte(String type, String imgName) {
 		
 		try {

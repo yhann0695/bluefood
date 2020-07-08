@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	layout:decorator="/base/layout" th:with="link=@{/restaurante/home}">
+
+	<body>
+		<div layout:fragment="content">
+		
+			<div>
+				<h1>Comidas</h1>
+			</div>
+		
+			<div th:each="item : ${itensCardapio}">
+				<span id="restauranteOpcaoTitulo" th:text="${item.nome}"></span><br/>
+				<span th:text="${item.categoria}"></span><br/>
+				<span th:text="${item.descricao}">.</span><br/>
+				<span th:text="${#numbers.formatCurrency(item.preco)}"></span><br/>
+				<input type="button" value="Remover" th:onclick="'location.href=\'' + @{/restaurante/comidas/remover} + '?itemId=' + ${item.id} + '\';'"><br/><br/>
+			</div>	
+				<span th:if="${itensCardapio.size() == 0}">Não existem comdias cadastradas</span>
+
+				<div id="mensagemDeErro" th:if="${msg != null}">
+					<span th:text="${msg}"></span>
+				</div><br>
+				
+				<span id="restauranteOpcaoTitulo">Nova comida:</span><br/>
+				<form method="post" th:object="${itemCardapio}" th:action="@{/restaurante/comidas/cadastrar}" enctype="multipart/form-data">
+				
+					<input type="hidden" name="restaurante.id" th:value="${restaurante.id}">
+				
+					<label for="nome">Nome: </label><br/>	
+					<input type="text" name="nome" id="nome" th:field="*{nome}"
+					th:classappend="${#fields.hasErrors('nome')} ? 'inputError' : ''"><br/>
+					<div id="mensagemDeErro" th:if="${#fields.hasErrors('nome')}">
+						<span th:errors="*{nome}"></span>
+					</div>
+					
+					<label for="descricao">Descrição: </label><br/>	
+					<input type="text" name="descricao" id="descricao" th:field="*{descricao}"
+					th:classappend="${#fields.hasErrors('descricao')} ? 'inputError' : ''"><br/>
+					<div id="mensagemDeErro" th:if="${#fields.hasErrors('descricao')}">
+						<span th:errors="*{descricao}"></span>
+					</div>
+					
+					<label for="preco">Preço: </label><br/>	
+					<input type="text" name="preco" id="preco" th:field="*{preco}"
+					th:classappend="${#fields.hasErrors('preco')} ? 'inputError' : ''"><br/>
+					<div id="mensagemDeErro" th:if="${#fields.hasErrors('preco')}">
+						<span th:errors="*{preco}"></span>
+					</div>
+					
+					<label for="categoria">Categoria de comida: </label><br/>	
+					<input type="text" name="categoria" id="categoria" th:field="*{categoria}"
+					th:classappend="${#fields.hasErrors('categoria')} ? 'inputError' : ''"><br/>
+					<div id="mensagemDeErro" th:if="${#fields.hasErrors('categoria')}">
+						<span th:errors="*{categoria}"></span>
+					</div>
+					
+					<label for="destaque">Destaque: </label><br>	
+					<input type="checkbox" name="destaque" id="destaque" th:field="*{destaque}"><br/><br/>
+					
+					<label for="logotipo">Logotipo:</label>
+					<input type="file" name="imagemFile" id="imagemFile" th:field="*{imagemFile}" placeholder="Selecionar..."
+					th:classappend="${#fields.hasErrors('imagemFile')} ? 'inputError' : ''"><br/><br/>
+					<div id="mensagemDeErro" th:if="${#fields.hasErrors('imagemFile')}">
+						<span th:errors="*{imagemFile}"></span>
+					</div>
+						
+					<input type="submit" value="Adicionar"><br/><br/>
+				</form>
+			
+	
+			<input type="button" value="Voltar" th:onclick="'location.href=\'' + @{/restaurante/home} + '\';'">
+
+		</div>
+	</body>
+</html>
